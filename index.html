@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spot — Book a personal trainer for one session</title>
+<meta name="description" content="Book a single session with a vetted local personal trainer. Fixed prices, no packages, no pressure.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<!--
+  SETUP CHECKLIST — search this file for "TODO" to find every spot to edit:
+  1. Trainer calendars: replace each calendly.com/YOUR_TRAINER_CALENDLY_… with that trainer's Calendly link.
+  2. Payment links (not on this page): create one Stripe Payment Link per session type and send it
+     to clients after they book. Set each link's "After payment" to redirect to /booked.html.
+  3. Waitlist form: replace YOUR_FORM_ID with your Formspree form ID.
+  4. Trainer application: replace YOUR_TALLY_FORM with your Tally form link.
+  5. Swap sample trainers, prices, photos and the "Spot" name.
+-->
+<style>
+:root{
+  --accent:#1F5C46; --accent-dark:#163F31; --accent-soft:#E6F0EA; --accent-tint:#F3F7F4;
+  --ink:#16181A; --body:#4A4E52; --muted:#5B5F63; --line:#E2E0DA;
+  --ground:#F6F5F2; --white:#FFFFFF;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--ground);line-height:1.5}
+h1,h2,h3,.brand,.price,.num{font-family:'Space Grotesk',sans-serif}
+a{color:var(--accent)}a:hover{color:var(--accent-dark)}
+img{max-width:100%;display:block}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.band{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+section{padding:72px 0}
+h2{margin:0;font-size:clamp(30px,4vw,40px);letter-spacing:-1px;line-height:1.1}
+.lead{margin:10px 0 0;font-size:17px;color:var(--body);max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:10px;border:0;background:var(--accent);color:var(--white);font:inherit;font-weight:600;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--accent-dark);color:var(--white)}
+.btn.pill{border-radius:999px;min-height:44px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--white)}
+.tag{font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--accent-soft);color:#1F4D3B}
+.check{display:inline-flex;align-items:center;gap:8px}
+.placeholder{background:#E7E4DC;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;font-size:14px;padding:16px}
+
+/* Nav */
+header{border-bottom:1px solid var(--line)}
+nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px}
+.brand{font-weight:700;font-size:26px;color:var(--ink);text-decoration:none;letter-spacing:-.5px}
+.brand span{color:var(--accent)}
+.navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:24px;font-size:15px}
+.navlinks a:not(.btn){color:#3D4145;text-decoration:none}
+
+/* Hero */
+.hero{display:flex;flex-wrap:wrap;gap:48px;align-items:center;padding-top:72px;padding-bottom:56px}
+.hero-copy{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.eyebrow{margin:0;font-size:14px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
+h1{margin:0;font-size:clamp(40px,6vw,68px);line-height:1.02;letter-spacing:-1.5px}
+.hero-copy>p.sub{margin:0;font-size:19px;color:var(--body);max-width:560px}
+.search{display:flex;flex-wrap:wrap;gap:12px;background:var(--white);border:1px solid var(--line);border-radius:16px;padding:12px;max-width:640px}
+.search label{flex:1 1 150px;display:flex;flex-direction:column;gap:4px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--muted)}
+.search select,.search input{font:inherit;font-size:16px;font-weight:500;color:var(--ink);border:0;background:transparent;padding:4px 0;min-height:32px}
+.search .btn{flex:1 1 140px;min-height:52px}
+.checks{display:flex;flex-wrap:wrap;gap:20px;font-size:14px;color:#3D4145}
+.hero-side{flex:1 1 360px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.hero-img{aspect-ratio:4/3;border-radius:20px;background:#DCE6DF;border:1px dashed #9DB5A6;color:#35594A}
+.next{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;font-size:14px;color:#3D4145}
+.next .dot{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:600;flex:none}
+
+/* Sessions */
+.session{border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:14px;background:var(--white)}
+.session.featured{border:2px solid var(--accent);background:var(--accent-tint)}
+.session h3{margin:0;font-size:24px}
+.session p{margin:0;font-size:15px;color:var(--body)}
+.session .meta{font-size:14px;color:var(--muted)}
+.badge{align-self:flex-start;font-size:12px;font-weight:600;background:var(--accent);color:var(--white);padding:4px 10px;border-radius:999px}
+.row-end{margin-top:auto;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.price{font-size:32px;font-weight:700}
+
+/* How */
+.step{display:flex;flex-direction:column;gap:10px}
+.step .num{font-size:44px;font-weight:700;color:var(--accent)}
+.step h3{margin:0;font-size:20px}
+.step p{margin:0;font-size:15px;color:var(--body)}
+
+/* Trainers */
+.trainer-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid #CFCCC4;background:var(--white);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--white);font-weight:600}
+.trainer{border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;background:var(--white)}
+.trainer .photo{aspect-ratio:16/10}
+.trainer .body{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1}
+.trainer .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.trainer h3{margin:0;font-size:20px}
+.trainer .where{font-size:14px;color:var(--muted)}
+.trainer p{margin:0;font-size:14px;color:var(--body)}
+.trainer .tags{display:flex;flex-wrap:wrap;gap:6px}
+.trainer .btn{margin-top:auto}
+.trainer[hidden]{display:none}
+
+/* FAQ */
+.faq-wrap{display:flex;flex-wrap:wrap;gap:48px}
+.faq-intro{flex:1 1 320px;min-width:0}
+.faq-intro p{margin:14px 0 0;font-size:17px;color:var(--body)}
+.faq{flex:2 1 480px;min-width:0}
+details{border-top:1px solid var(--line);padding:18px 0}
+details:last-child{border-bottom:1px solid var(--line)}
+summary{font-size:17px;font-weight:600;cursor:pointer}
+details p{margin:10px 0 0;font-size:15px;color:var(--body)}
+
+/* For trainers */
+.fees{margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.fee{border:1px solid var(--line);border-radius:18px;padding:24px;background:var(--white);display:flex;flex-direction:column;gap:12px}
+.fee.founding{border:2px solid var(--accent);background:var(--accent-tint)}
+.fee h3{margin:0;font-size:22px}
+.fee .rate{font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;line-height:1}
+.fee .rate small{font-size:16px;font-weight:500;color:var(--muted);margin-left:6px}
+.fee ul{margin:0;padding-left:18px;font-size:15px;color:var(--body)}
+.fee li+li{margin-top:6px}
+.example{margin-top:28px;overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--white)}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:520px}
+th,td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line)}
+th{font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+tr:last-child td{border-bottom:0}
+td.num-cell{font-variant-numeric:tabular-nums;font-weight:600}
+.included{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px 28px;font-size:15px;color:#3D4145}
+.fine{margin:20px 0 0;font-size:13px;color:var(--muted)}
+.apply{margin-top:28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+
+/* Waitlist */
+.dark{background:var(--ink);color:var(--ground)}
+.dark-inner{display:flex;flex-wrap:wrap;gap:40px;align-items:center;justify-content:space-between;padding:64px 24px}
+.dark h2{font-size:34px}
+.dark p{margin:10px 0 0;color:#C9CBC6}
+.waitlist{flex:1 1 380px;min-width:0;display:flex;flex-wrap:wrap;gap:10px}
+.waitlist label{flex:1 1 160px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#C9CBC6}
+.waitlist input{font:inherit;font-size:16px;padding:12px 14px;min-height:48px;border-radius:10px;border:1px solid #6A6E72;background:#23262A;color:var(--ground)}
+.waitlist button{align-self:flex-end;background:var(--ground);color:var(--ink)}
+.waitlist button:hover{background:var(--white);color:var(--ink)}
+
+footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="#top">spot<span>.</span></a>
+    <div class="navlinks">
+      <a href="#sessions">Sessions</a>
+      <a href="#trainers">Trainers</a>
+      <a href="#how">How it works</a>
+      <a href="#for-trainers">For trainers</a>
+      <a class="btn pill" href="#sessions">Book a session</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <div class="wrap hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Now booking in Loudoun County</p>
+      <h1>One session with a real trainer. No packages. No pressure.</h1>
+      <p class="sub">Book a single workout with a vetted local trainer — whether you're brand new, nervous about committing, or just in town for a few days. Fixed prices, and nothing to pay until your session is confirmed.</p>
+      <form class="search" id="search">
+        <label>Session
+          <select name="session">
+            <option>First Timer · 45 min</option>
+            <option>Form Check · 30 min</option>
+            <option>Travel Sweat · 45 min</option>
+            <option>Bring a Friend · 45 min</option>
+          </select>
+        </label>
+        <label>Near
+          <input name="near" type="text" value="Ashburn, VA">
+        </label>
+        <label>When
+          <select name="when">
+            <option>This week</option><option>Today</option><option>Tomorrow</option><option>Weekend</option>
+          </select>
+        </label>
+        <button class="btn" type="submit">Find trainers</button>
+      </form>
+      <div class="checks">
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Certified &amp; insured</span>
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>First session refund if it's not a fit</span>
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Book now, pay before your session</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <!-- TODO: replace with <img src="hero.jpg" alt="..."> -->
+      <div class="hero-img placeholder">Hero photo: a trainer coaching a beginner in a bright, uncrowded gym</div>
+      <div class="next"><div class="dot">45</div><div><strong style="color:var(--ink)">Next open slot:</strong> today, 6:15 PM at One Loudoun — First Timer session</div></div>
+    </div>
+  </div>
+
+  <!-- SESSIONS -->
+  <section id="sessions" class="band">
+    <div class="wrap">
+      <h2>Pick a session. The price is the price.</h2>
+      <p class="lead">No quotes, no consultations to sit through, no sales pitch at the end.</p>
+      <div class="grid">
+        <article class="session featured">
+          <span class="badge">Most booked</span>
+          <h3>First Timer</h3>
+          <p>A patient walkthrough of the basics. Learn the equipment, find your starting weights, leave with a plan.</p>
+          <p class="meta">45 min · beginner-friendly</p>
+          <div class="row-end"><span class="price">$65</span><a href="#trainers">Choose a trainer →</a></div>
+        </article>
+        <article class="session">
+          <h3>Form Check</h3>
+          <p>Already lift? Get eyes on your squat, deadlift or press and fix what's holding you back.</p>
+          <p class="meta">30 min · any level</p>
+          <div class="row-end"><span class="price">$45</span><a href="#trainers">Choose a trainer →</a></div>
+        </article>
+        <article class="session">
+          <h3>Travel Sweat</h3>
+          <p>In town for work? A trainer meets you at your hotel gym or a nearby park. No equipment needed.</p>
+          <p class="meta">45 min · hotel or outdoor</p>
+          <div class="row-end"><span class="price">$70</span><a href="#trainers">Choose a trainer →</a></div>
+        </article>
+        <article class="session">
+          <h3>Bring a Friend</h3>
+          <p>Less nerve-wracking with company. Two people, one trainer, one price.</p>
+          <p class="meta">45 min · for two</p>
+          <div class="row-end"><span class="price">$90</span><a href="#trainers">Choose a trainer →</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <div class="grid">
+        <div class="step"><span class="num">01</span><h3>Pick a trainer &amp; time</h3><p>Choose a trainer, grab an open slot on their calendar, and tell them your session type, goals and any injuries.</p></div>
+        <div class="step"><span class="num">02</span><h3>Pay before your session</h3><p>Once you're booked, we text or email you a secure payment link. Card, Apple Pay or Google Pay — due before your session starts.</p></div>
+        <div class="step"><span class="num">03</span><h3>Show up &amp; train</h3><p>Loved it? Rebook the same trainer or try someone new. No contract, ever.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINERS -->
+  <section id="trainers" class="band">
+    <div class="wrap">
+      <div class="trainer-head">
+        <div>
+          <h2>Trainers near you</h2>
+          <p class="lead">Sample profiles — swap in your launch roster.</p>
+        </div>
+        <div class="chips" role="group" aria-label="Filter trainers">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="chip" type="button" data-filter="beginner" aria-pressed="false">Beginner-patient</button>
+          <button class="chip" type="button" data-filter="women" aria-pressed="false">Women-only</button>
+          <button class="chip" type="button" data-filter="travel" aria-pressed="false">Travel-ready</button>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+        <!-- Each trainer: data-tags drives the filter chips. TODO: set each button to that trainer's Calendly link. -->
+        <article class="trainer" data-tags="beginner">
+          <div class="photo placeholder">Trainer photo</div>
+          <div class="body">
+            <div class="top"><h3>Dana R.</h3><span class="where">Ashburn</span></div>
+            <p>NASM-CPT · strength &amp; mobility · 6 yrs</p>
+            <div class="tags"><span class="tag">Beginner-patient</span><span class="tag">No yelling</span><span class="tag">Quiet gym</span></div>
+            <p>Next: <strong>Today 6:15 PM</strong></p>
+            <a class="btn" href="https://calendly.com/YOUR_TRAINER_CALENDLY_1" target="_blank" rel="noopener">See Dana's times</a>
+          </div>
+        </article>
+        <article class="trainer" data-tags="women beginner">
+          <div class="photo placeholder">Trainer photo</div>
+          <div class="body">
+            <div class="top"><h3>Sara M.</h3><span class="where">Sterling</span></div>
+            <p>ACE-CPT · Pilates &amp; core · 4 yrs</p>
+            <div class="tags"><span class="tag">Women-only</span><span class="tag">Postnatal</span><span class="tag">Private studio</span></div>
+            <p>Next: <strong>Tomorrow 9:30 AM</strong></p>
+            <a class="btn" href="https://calendly.com/YOUR_TRAINER_CALENDLY_2" target="_blank" rel="noopener">See Sara's times</a>
+          </div>
+        </article>
+        <article class="trainer" data-tags="travel">
+          <div class="photo placeholder">Trainer photo</div>
+          <div class="body">
+            <div class="top"><h3>Marcus T.</h3><span class="where">Dulles corridor</span></div>
+            <p>NSCA-CPT · conditioning · 8 yrs</p>
+            <div class="tags"><span class="tag">Travel-ready</span><span class="tag">Hotel gyms</span><span class="tag">5 AM slots</span></div>
+            <p>Next: <strong>Tomorrow 5:30 AM</strong></p>
+            <a class="btn" href="https://calendly.com/YOUR_TRAINER_CALENDLY_3" target="_blank" rel="noopener">See Marcus's times</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="wrap faq-wrap">
+      <div class="faq-intro">
+        <h2>Nervous? That's the point.</h2>
+        <p>Every trainer here agreed to coach first-timers without judgment. If your first session isn't a fit, we refund it — no questions.</p>
+      </div>
+      <div class="faq">
+        <details><summary>Do I need a gym membership?</summary><p>No. Every listing shows where the session happens — a trainer's private studio, a park, your home, your hotel gym, or your own gym if it allows guests.</p></details>
+        <details><summary>What if I need to cancel?</summary><p>Cancel or reschedule from your Calendly confirmation email. Please give at least 12 hours' notice. Repeated late cancellations or no-shows may lose booking access.</p></details>
+        <details><summary>When do I pay?</summary><p>After your booking is confirmed, we send you a secure payment link for your session type. Payment is due before your session starts. Nothing is charged until you pay that link.</p></details>
+        <details><summary>Are trainers certified and insured?</summary><p>Yes. We verify certification, liability insurance and a background check before anyone is listed.</p></details>
+        <details><summary>Will they try to sell me a package?</summary><p>No. Rebooking is one tap if you want it, and nothing if you don't.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR TRAINERS -->
+  <section id="for-trainers" class="band">
+    <div class="wrap">
+      <h2>Fill your empty hours. Pay only when you train.</h2>
+      <p class="lead">No lead fees, no monthly subscription. We bring you new clients and take a cut only on completed sessions.</p>
+
+      <div class="fees">
+        <div class="fee founding">
+          <span class="badge">10 spots only</span>
+          <h3>Founding Trainer</h3>
+          <div class="rate">15%<small>every session</small></div>
+          <ul>
+            <li>Locked in permanently while you stay active</li>
+            <li>Same rate on new clients and repeats</li>
+            <li>Founding Trainer badge on your profile</li>
+          </ul>
+        </div>
+        <div class="fee">
+          <h3>Standard</h3>
+          <div class="rate">25%<small>new client's first session</small></div>
+          <div class="rate" style="font-size:32px">15%<small>every repeat session</small></div>
+          <ul>
+            <li>You only pay 25% when we bring you someone new</li>
+            <li>Repeat bookings through Spot drop to 15%</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="example">
+        <table>
+          <caption style="caption-side:top;text-align:left;padding:14px 18px 0;font-weight:600">What you take home on a $65 session</caption>
+          <thead><tr><th>Session</th><th>Spot's cut</th><th>You get</th></tr></thead>
+          <tbody>
+            <tr><td>Founding Trainer — any session</td><td class="num-cell">$9.75</td><td class="num-cell">$55.25</td></tr>
+            <tr><td>Standard — new client's first session</td><td class="num-cell">$16.25</td><td class="num-cell">$48.75</td></tr>
+            <tr><td>Standard — repeat session</td><td class="num-cell">$9.75</td><td class="num-cell">$55.25</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="included">
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>We cover card processing fees</span>
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Refund guarantee comes out of our cut, not yours</span>
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>We collect payment before every session</span>
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Weekly payouts</span>
+      </div>
+
+      <p class="fine">Rates apply to sessions booked and paid through Spot. Founding rate is non-transferable and stays in place as long as you remain active on Spot. Full terms in the trainer agreement.</p>
+
+      <div class="apply">
+        <!-- TODO: link to your trainer application form (e.g. Tally) -->
+        <a class="btn" href="https://tally.so/r/YOUR_TALLY_FORM" target="_blank" rel="noopener">Apply to train with Spot</a>
+        <span style="font-size:14px;color:var(--muted)">Certification, liability insurance and a background check required.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAITLIST -->
+  <section class="dark" style="padding:0">
+    <div class="wrap dark-inner">
+      <div style="flex:1 1 360px;min-width:0">
+        <h2>Not in your area yet?</h2>
+        <p>Tell us where you are and we'll let you know when trainers go live.</p>
+      </div>
+      <!-- TODO: replace YOUR_FORM_ID with your Formspree form ID -->
+      <form class="waitlist" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <label>Email<input type="email" name="email" placeholder="you@example.com" required></label>
+        <label style="flex:1 1 110px">ZIP code<input type="text" name="zip" inputmode="numeric" placeholder="20147" required></label>
+        <button class="btn" type="submit">Notify me</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>© 2026 Spot · <a href="#for-trainers">For trainers</a></footer>
+
+<script>
+  // Hero search: scroll to the trainers section (real filtering can come later)
+  document.getElementById('search').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('trainers').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Trainer filter chips
+  var chips = document.querySelectorAll('.chip');
+  var trainers = document.querySelectorAll('.trainer');
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var f = chip.dataset.filter;
+      chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+      trainers.forEach(function (t) {
+        t.hidden = !(f === 'all' || t.dataset.tags.split(' ').indexOf(f) !== -1);
+      });
+    });
+  });
+</script>
+</body>
+</html>
