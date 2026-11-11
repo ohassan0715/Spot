@@ -148,7 +148,7 @@ Available tags: `beginner`, `women`, `travel`. To add a new filter, add a matchi
 
 ## Roadmap
 
-- [ ] Launch with 10 founding trainers in Loudoun County
+- [ ] Launch with 10 founding trainers in Northern VA
 - [ ] Run a 60–90 day MVP on Stripe Payment Links + free Calendly
 - [ ] Add real search and filtering by session, location, and time
 - [ ] Migrate to Stripe Connect for automatic payouts
