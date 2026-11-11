@@ -10,10 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <!--
   SETUP CHECKLIST — search this file for "TODO" to find every spot to edit:
-  1. Booking links: replace YOUR-ACUITY-LINK with your Acuity (or Calendly) URLs.
-  2. Waitlist form: replace YOUR_FORM_ID with your Formspree form ID.
-  3. Trainer application: replace YOUR_TALLY_FORM with your Tally form link.
-  4. Swap sample trainers, prices, photos and the "Spot" name.
+  1. Trainer calendars: replace each calendly.com/YOUR_TRAINER_CALENDLY_… with that trainer's Calendly link.
+  2. Payment links (not on this page): create one Stripe Payment Link per session type and send it
+     to clients after they book. Set each link's "After payment" to redirect to /booked.html.
+  3. Waitlist form: replace YOUR_FORM_ID with your Formspree form ID.
+  4. Trainer application: replace YOUR_TALLY_FORM with your Tally form link.
+  5. Swap sample trainers, prices, photos and the "Spot" name.
 -->
 <style>
 :root{
@@ -162,7 +164,7 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
     <div class="hero-copy">
       <p class="eyebrow">Now booking in Loudoun County</p>
       <h1>One session with a real trainer. No packages. No pressure.</h1>
-      <p class="sub">Book a single workout with a vetted local trainer — whether you're brand new, nervous about committing, or just in town for a few days. Fixed prices, pay when you book.</p>
+      <p class="sub">Book a single workout with a vetted local trainer — whether you're brand new, nervous about committing, or just in town for a few days. Fixed prices, and nothing to pay until your session is confirmed.</p>
       <form class="search" id="search">
         <label>Session
           <select name="session">
@@ -185,7 +187,7 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
       <div class="checks">
         <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Certified &amp; insured</span>
         <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>First session refund if it's not a fit</span>
-        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Free cancellation up to 12 hrs before</span>
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Book now, pay before your session</span>
       </div>
     </div>
     <div class="hero-side">
@@ -206,25 +208,25 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
           <h3>First Timer</h3>
           <p>A patient walkthrough of the basics. Learn the equipment, find your starting weights, leave with a plan.</p>
           <p class="meta">45 min · beginner-friendly</p>
-          <div class="row-end"><span class="price">$65</span><a href="#trainers">Book →</a></div>
+          <div class="row-end"><span class="price">$65</span><a href="#trainers">Choose a trainer →</a></div>
         </article>
         <article class="session">
           <h3>Form Check</h3>
           <p>Already lift? Get eyes on your squat, deadlift or press and fix what's holding you back.</p>
           <p class="meta">30 min · any level</p>
-          <div class="row-end"><span class="price">$45</span><a href="#trainers">Book →</a></div>
+          <div class="row-end"><span class="price">$45</span><a href="#trainers">Choose a trainer →</a></div>
         </article>
         <article class="session">
           <h3>Travel Sweat</h3>
           <p>In town for work? A trainer meets you at your hotel gym or a nearby park. No equipment needed.</p>
           <p class="meta">45 min · hotel or outdoor</p>
-          <div class="row-end"><span class="price">$70</span><a href="#trainers">Book →</a></div>
+          <div class="row-end"><span class="price">$70</span><a href="#trainers">Choose a trainer →</a></div>
         </article>
         <article class="session">
           <h3>Bring a Friend</h3>
           <p>Less nerve-wracking with company. Two people, one trainer, one price.</p>
           <p class="meta">45 min · for two</p>
-          <div class="row-end"><span class="price">$90</span><a href="#trainers">Book →</a></div>
+          <div class="row-end"><span class="price">$90</span><a href="#trainers">Choose a trainer →</a></div>
         </article>
       </div>
     </div>
@@ -235,8 +237,8 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
     <div class="wrap">
       <h2>How it works</h2>
       <div class="grid">
-        <div class="step"><span class="num">01</span><h3>Choose a session &amp; trainer</h3><p>Filter by vibe, location and time. See exactly where you'll train before you book.</p></div>
-        <div class="step"><span class="num">02</span><h3>Pay to confirm</h3><p>Card, Apple Pay or Google Pay. A 2-minute form tells your trainer your goals and any injuries.</p></div>
+        <div class="step"><span class="num">01</span><h3>Pick a trainer &amp; time</h3><p>Choose a trainer, grab an open slot on their calendar, and tell them your session type, goals and any injuries.</p></div>
+        <div class="step"><span class="num">02</span><h3>Pay before your session</h3><p>Once you're booked, we text or email you a secure payment link. Card, Apple Pay or Google Pay — due before your session starts.</p></div>
         <div class="step"><span class="num">03</span><h3>Show up &amp; train</h3><p>Loved it? Rebook the same trainer or try someone new. No contract, ever.</p></div>
       </div>
     </div>
@@ -258,7 +260,7 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
         </div>
       </div>
       <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
-        <!-- Each trainer: data-tags drives the filter chips. TODO: set each href to that trainer's booking link. -->
+        <!-- Each trainer: data-tags drives the filter chips. TODO: set each button to that trainer's Calendly link. -->
         <article class="trainer" data-tags="beginner">
           <div class="photo placeholder">Trainer photo</div>
           <div class="body">
@@ -266,7 +268,7 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
             <p>NASM-CPT · strength &amp; mobility · 6 yrs</p>
             <div class="tags"><span class="tag">Beginner-patient</span><span class="tag">No yelling</span><span class="tag">Quiet gym</span></div>
             <p>Next: <strong>Today 6:15 PM</strong></p>
-            <a class="btn" href="https://YOUR-ACUITY-LINK.as.me/?calendarID=TRAINER_1" target="_blank" rel="noopener">Book from $45</a>
+            <a class="btn" href="https://calendly.com/YOUR_TRAINER_CALENDLY_1" target="_blank" rel="noopener">See Dana's times</a>
           </div>
         </article>
         <article class="trainer" data-tags="women beginner">
@@ -276,7 +278,7 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
             <p>ACE-CPT · Pilates &amp; core · 4 yrs</p>
             <div class="tags"><span class="tag">Women-only</span><span class="tag">Postnatal</span><span class="tag">Private studio</span></div>
             <p>Next: <strong>Tomorrow 9:30 AM</strong></p>
-            <a class="btn" href="https://YOUR-ACUITY-LINK.as.me/?calendarID=TRAINER_2" target="_blank" rel="noopener">Book from $65</a>
+            <a class="btn" href="https://calendly.com/YOUR_TRAINER_CALENDLY_2" target="_blank" rel="noopener">See Sara's times</a>
           </div>
         </article>
         <article class="trainer" data-tags="travel">
@@ -286,7 +288,7 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
             <p>NSCA-CPT · conditioning · 8 yrs</p>
             <div class="tags"><span class="tag">Travel-ready</span><span class="tag">Hotel gyms</span><span class="tag">5 AM slots</span></div>
             <p>Next: <strong>Tomorrow 5:30 AM</strong></p>
-            <a class="btn" href="https://YOUR-ACUITY-LINK.as.me/?calendarID=TRAINER_3" target="_blank" rel="noopener">Book from $70</a>
+            <a class="btn" href="https://calendly.com/YOUR_TRAINER_CALENDLY_3" target="_blank" rel="noopener">See Marcus's times</a>
           </div>
         </article>
       </div>
@@ -302,7 +304,8 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
       </div>
       <div class="faq">
         <details><summary>Do I need a gym membership?</summary><p>No. Every listing shows where the session happens — a trainer's private studio, a park, your home, your hotel gym, or your own gym if it allows guests.</p></details>
-        <details><summary>What if I need to cancel?</summary><p>Free cancellation up to 12 hours before. Inside 12 hours, the trainer keeps half.</p></details>
+        <details><summary>What if I need to cancel?</summary><p>Cancel or reschedule from your Calendly confirmation email. Please give at least 12 hours' notice. Repeated late cancellations or no-shows may lose booking access.</p></details>
+        <details><summary>When do I pay?</summary><p>After your booking is confirmed, we send you a secure payment link for your session type. Payment is due before your session starts. Nothing is charged until you pay that link.</p></details>
         <details><summary>Are trainers certified and insured?</summary><p>Yes. We verify certification, liability insurance and a background check before anyone is listed.</p></details>
         <details><summary>Will they try to sell me a package?</summary><p>No. Rebooking is one tap if you want it, and nothing if you don't.</p></details>
       </div>
@@ -352,7 +355,7 @@ footer{padding:32px 24px;font-size:14px;color:var(--muted);text-align:center}
       <div class="included">
         <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>We cover card processing fees</span>
         <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Refund guarantee comes out of our cut, not yours</span>
-        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>You get your share of late-cancel fees</span>
+        <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>We collect payment before every session</span>
         <span class="check"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Weekly payouts</span>
       </div>
 

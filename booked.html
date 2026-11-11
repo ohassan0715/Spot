@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spot — You're all set</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- Stripe Payment Links redirect here after a client pays for a session they've already booked. -->
+<style>
+:root{--accent:#1F5C46;--accent-dark:#163F31;--ink:#16181A;--body:#4A4E52;--muted:#5B5F63;--line:#E2E0DA;--ground:#F6F5F2;--white:#FFFFFF}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--ground);line-height:1.5}
+h1,.brand{font-family:'Space Grotesk',sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:720px;margin:0 auto;padding:0 24px}
+header{border-bottom:1px solid var(--line);padding:18px 0}
+.brand{font-weight:700;font-size:26px;color:var(--ink);text-decoration:none;letter-spacing:-.5px}
+.brand span{color:var(--accent)}
+main{padding:64px 0;display:flex;flex-direction:column;gap:18px}
+.done{display:inline-flex;align-items:center;gap:10px;font-weight:600;color:var(--accent)}
+h1{margin:0;font-size:clamp(32px,5vw,48px);line-height:1.08;letter-spacing:-1px}
+p{margin:0;font-size:18px;color:var(--body)}
+ul{margin:0;padding:20px 20px 20px 40px;background:var(--white);border:1px solid var(--line);border-radius:14px;font-size:16px;color:#3D4145}
+li+li{margin-top:8px}
+.btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:10px;background:var(--accent);color:var(--white);font-weight:600;text-decoration:none}
+.btn:hover{background:var(--accent-dark);color:var(--white)}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="index.html">spot<span>.</span></a></div></header>
+<main class="wrap">
+  <span class="done"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F5C46" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Payment received</span>
+  <h1>You're all set. See you at your session.</h1>
+  <p>Your receipt is on its way to your inbox, and your trainer has been notified.</p>
+  <ul>
+    <li>Your session time and location are in your Calendly confirmation email.</li>
+    <li>Need to reschedule? Use the link in that email, with at least 12 hours' notice.</li>
+    <li>Wear comfortable clothes, bring water, and arrive a few minutes early.</li>
+  </ul>
+  <a class="btn" href="index.html">Back to Spot</a>
+</main>
+</body>
+</html>
